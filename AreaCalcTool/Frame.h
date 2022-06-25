@@ -5,7 +5,8 @@
 class Frame : public Element, public IParentable
 {
 public:
-	Frame(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, COLORREF background);
+	Frame(int x, int y, int width, int height, unsigned char alignment, HWND hParent, 
+		HINSTANCE hInstance, Style style);
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 	virtual void OnSizeChanged(HWND hParent) override;
 
@@ -16,6 +17,6 @@ public:
 	virtual void RemoveChild(int index) override;
 
 private:
-	COLORREF background;
+	Style style;
 };
 

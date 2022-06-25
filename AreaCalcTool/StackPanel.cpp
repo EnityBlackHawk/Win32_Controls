@@ -5,7 +5,7 @@ StackPanel::StackPanel(Frame&& frame):
 }
 
 StackPanel::StackPanel(int x, int y, unsigned char alignment, HWND hParent, HINSTANCE hInstance, COLORREF background):
-	Frame(x, y, 0, 0, alignment, hParent, hInstance, background)
+	Frame(x, y, 0, 0, alignment, hParent, hInstance, {0, background})
 {
 }
 

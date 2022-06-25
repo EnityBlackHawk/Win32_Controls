@@ -16,13 +16,10 @@ LRESULT CALLBACK DummyProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
 Button::Button(const char* text, int width, int height, int x, int y, unsigned char align, 
-    HWND hParent, HINSTANCE hInstance, COLORREF backgroundColor, COLORREF foreground,
-    int cornerRarius, COLORREF borderColor):
+    HWND hParent, HINSTANCE hInstance, Style style):
     text(text),
-    foregroundColor(foreground),
-    backgroundColor(backgroundColor),
-    cornerRarius(cornerRarius),
-    borderColor(borderColor)
+    style(style)
+    
 {
     Element::width = width;
     Element::height = height;
@@ -108,17 +105,17 @@ HRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         auto hrc = BeginPaint(hwnd, & ps);
         
         SelectObject(hrc, font);
-        SetTextColor(hrc, foregroundColor);
-        SetBkColor(hrc, backgroundColor);
+        SetTextColor(hrc, style.foreground);
+        SetBkColor(hrc, style.background);
         SetTextAlign(hrc, TA_CENTER);
         
-        if (borderColor != NULL)
+        if (style.borderColor != NULL)
         {
             HPEN pen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
             SelectObject(hrc, pen);
         }
         
-        auto r = RoundRect(hrc, 0, 0, width, height, cornerRarius, cornerRarius);
+        auto r = RoundRect(hrc, 0, 0, width, height, style.cornerRadius, style.cornerRadius);
         r = TextOut(hrc, width / 2, ((height - fontHeight)/2) - 2, text, strlen(text));
         DeleteObject(font);
         EndPaint(hwnd, &ps);

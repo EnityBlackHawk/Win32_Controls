@@ -7,7 +7,7 @@ class Button : public Element, public ICommandable, public IParentable
 {
 public:
 	Button(const char* text, int width, int height, int x, int y, unsigned char align, HWND hParent, 
-		HINSTANCE hInstance, COLORREF backgroundColor, COLORREF foreground, int cornerRarius = 0, COLORREF borderColor = NULL);
+		HINSTANCE hInstance, Style style);
 	void SetText(const char* text);
 	
 
@@ -21,11 +21,9 @@ public:
 	static HRESULT ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
 	const char* text;
-	COLORREF backgroundColor;
-	COLORREF foregroundColor;
+	Style style;
 	HCURSOR handCursor;
-	int cornerRarius;
-	COLORREF borderColor;
+
 
 	// Inherited via IParentable
 	virtual void LoadChilds(HINSTANCE hInstance) override;

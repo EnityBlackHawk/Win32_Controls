@@ -3,12 +3,34 @@
 
 LRESULT CALLBACK FrameProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    static Style style;
     switch (uMsg)
     {
+    case WM_CREATE:
+    {
+        CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
+        style = *reinterpret_cast<Style*>(cs->lpCreateParams);
+        break;
+    }
     case WM_PAINT:
     {
+        RECT parentRect;
+        GetWindowRect(hwnd, &parentRect);
+
         PAINTSTRUCT ps = {};
-        BeginPaint(hwnd, &ps);
+        auto hdc = BeginPaint(hwnd, &ps);
+        HBRUSH b = CreateSolidBrush(style.background);
+        SelectObject(hdc, b);
+        
+        if (style.borderColor)
+        {
+            HPEN hp = CreatePen(PS_SOLID, style.borderThickness, style.borderColor);
+            SelectObject(hdc, hp);
+        }
+        
+        if(style.background != NULL)
+        RoundRect(hdc, 0, 0, parentRect.right - parentRect.left, parentRect.bottom - parentRect.top, style.cornerRadius, style.cornerRadius);
+        
         EndPaint(hwnd, &ps);
         break;
     }
@@ -17,8 +39,9 @@ LRESULT CALLBACK FrameProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, COLORREF background):
-    background(background)
+Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, 
+    Style style):
+    style(style)
 {
     posX = x;
     posY = y;
@@ -29,17 +52,18 @@ Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND 
     const char* name = "frame";
     HBRUSH b;
 
-    if (background == NULL)
+    if (style.background == NULL)
     {
         b = (HBRUSH)GetClassLongPtr(hParent, GCLP_HBRBACKGROUND);
     }
-    else b = CreateSolidBrush(background);
+    else b = CreateSolidBrush(style.background);
 
     WNDCLASS fr = {};
     fr.lpszClassName = "frame";
-    fr.hbrBackground = b;
+    fr.hbrBackground = (HBRUSH)GetClassLongPtr(hParent, GCLP_HBRBACKGROUND);;
     fr.hInstance = hInstance;
     fr.lpfnWndProc = FrameProc;
+    fr.hCursor = LoadCursor(NULL, IDC_ARROW);
     RegisterClass(&fr);
 
     hwnd = CreateWindowExA(
@@ -54,7 +78,7 @@ Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND 
         hParent,
         NULL,
         hInstance,
-        NULL
+        &style
     );
 
     if (!hwnd) return;
@@ -87,6 +111,7 @@ void Frame::LoadChilds(HINSTANCE hInstance)
         e->Show(hwnd, hInstance);
     }
 }
+
 
 void Frame::AddChild(Element& rElement)
 {

@@ -21,6 +21,14 @@ struct Margin
 	int bottom;
 };
 
+struct Style
+{
+	int cornerRadius = 0;
+	COLORREF background = NULL;
+	COLORREF foreground = NULL;
+	COLORREF borderColor = NULL;
+	int borderThickness = 1;
+};
 
 class Element
 {
