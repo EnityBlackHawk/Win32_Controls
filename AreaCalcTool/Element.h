@@ -62,19 +62,42 @@ public:
 		align = newAlign;
 	}
 
+	/// <summary>
+	/// Set postion x, postion y, width and heght
+	/// </summary>
+	/// <param name="x">New x position</param>
+	/// <param name="y">New y position</param>
+	/// <param name="newWidth">New width</param>
+	/// <param name="newHeight">New height</param>
+	/// <param name="modes">[optional] Window SetWindowPos config flags</param>
 	virtual void SetPosition(int x, int y, int newWidth, int newHeight, DWORD modes)
 	{	
 		width = newWidth;
 		height = newHeight;
 		auto b = SetWindowPos(hwnd, NULL, x, y, width, height, modes);
 	}
+	/// <summary>
+	/// Draw window
+	/// </summary>
+	/// <param name="hParent">Parent's HWND</param>
+	/// <param name="hInstance">Application HINSTANCE</param>
+	/// <returns>Window HWND</returns>
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) = 0;
+	/// <summary>
+	/// Function called when the window's size is chaged
+	/// </summary>
+	/// <param name="hParent">Parent's HWND</param>
 	virtual void OnSizeChanged(HWND hParent)
 	{
 		Align(hParent);
 	}
 
-	void SetStyle(DWORD style)
+
+	/// <summary>
+	/// Set window style
+	/// </summary>
+	/// <param name="style">Window style flag</param>
+	void SetWindowStyle(DWORD style)
 	{
 		Element::style = style;
 	}
@@ -84,6 +107,10 @@ public:
 		Element::margin = margin;
 	}
 
+	/// <summary>
+	/// Align the element based on parent window
+	/// </summary>
+	/// <param name="hParent">Parent's HWND</param>
 	void Align(HWND hParent)
 	{
 		if (align == ALIGN_CENTER_WINDOW)
@@ -156,6 +183,9 @@ public:
 		Element::hParent = hParent;
 	}
 
+	/// <summary>
+	/// Redraw the element. This function will mainly call the WS_PAINT
+	/// </summary>
 	void Reload()
 	{
 		if (!hwnd) return;

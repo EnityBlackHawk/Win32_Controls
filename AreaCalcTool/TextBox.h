@@ -6,6 +6,18 @@
 class TextBox : public Element, public ICommandable
 {
 public:
+	/// <summary>
+	/// Create a TextBox window
+	/// </summary>
+	/// <param name="text">Edit box text</param>
+	/// <param name="x">X position</param>
+	/// <param name="y">Y position</param>
+	/// <param name="width">Width</param>
+	/// <param name="height">Height</param>
+	/// <param name="hParent">Parent's HWND</param>
+	/// <param name="hInstance">Application HINSTANCE</param>
+	/// <param name="align">Align type</param>
+	/// <param name="style">Style struct</param>
 	TextBox(const char* text, int x, int y, int width, int height, HWND hParent, HINSTANCE hInstance, unsigned char align, Style style);
 	std::string GetText() const;
 

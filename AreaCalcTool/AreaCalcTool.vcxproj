@@ -133,6 +133,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StackPanel.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Element.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="Frame.h" />
+    <ClInclude Include="Grid.h" />
     <ClInclude Include="ICommandable.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="Parentable.h" />
