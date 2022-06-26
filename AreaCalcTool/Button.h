@@ -6,8 +6,8 @@
 class Button : public Element, public ICommandable, public IParentable
 {
 public:
-	Button(const char* text, int width, int height, int x, int y, unsigned char align, HWND hParent, 
-		HINSTANCE hInstance, Style style);
+	Button(const char* text, int width, int height, int x, int y, unsigned char align, int fontSize, 
+		HWND hParent, HINSTANCE hInstance, Style style);
 	void SetText(const char* text);
 	
 
@@ -23,6 +23,7 @@ private:
 	const char* text;
 	Style style;
 	HCURSOR handCursor;
+	int fontSize;
 
 
 	// Inherited via IParentable

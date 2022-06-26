@@ -24,6 +24,7 @@
     <ProjectGuid>{ccbd7e99-3ded-4d34-8d3f-375d348f7803}</ProjectGuid>
     <RootNamespace>AreaCalcTool</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Win32 Controls</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

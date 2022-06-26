@@ -13,6 +13,7 @@ public:
 		COLORREF background = NULL,
 		COLORREF foreground = RGB(255, 255, 255), 
 		HFONT hFont = NULL);
+	
 	void ChangeText(const char* newText);
 	void SetColor(COLORREF foregroud = NULL, COLORREF background = NULL);
 

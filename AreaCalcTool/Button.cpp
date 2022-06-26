@@ -15,11 +15,11 @@ LRESULT CALLBACK DummyProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-Button::Button(const char* text, int width, int height, int x, int y, unsigned char align, 
-    HWND hParent, HINSTANCE hInstance, Style style):
+Button::Button(const char* text, int width, int height, int x, int y, unsigned char align,
+    int fontSize, HWND hParent, HINSTANCE hInstance, Style style):
     text(text),
-    style(style)
-    
+    style(style),
+    fontSize(fontSize)
 {
     Element::width = width;
     Element::height = height;
@@ -93,12 +93,16 @@ void Button::RaiseEvent(int windowMessage)
 
 HRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    if (commands.contains(uMsg))
+    {
+        RaiseEvent(uMsg);
+    }
+
     switch (uMsg)
     {
     case WM_PAINT:
     {
-        int fontHeight = 30;
-        HFONT font = CreateFont(fontHeight , 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+        HFONT font = CreateFont(fontSize , 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
             CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Segoe UI")
         );
         PAINTSTRUCT ps = {};
@@ -116,15 +120,9 @@ HRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         }
         
         auto r = RoundRect(hrc, 0, 0, width, height, style.cornerRadius, style.cornerRadius);
-        r = TextOut(hrc, width / 2, ((height - fontHeight)/2) - 2, text, strlen(text));
+        r = TextOut(hrc, width / 2, ((height - fontSize)/2), text, strlen(text));
         DeleteObject(font);
         EndPaint(hwnd, &ps);
-        break;
-    }
-
-    case WM_LBUTTONUP:
-    {
-        RaiseEvent(uMsg);
         break;
     }
     case WM_SETCURSOR:
