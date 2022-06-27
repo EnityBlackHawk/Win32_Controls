@@ -18,6 +18,10 @@ public:
 	/// <param name="style">Style struct</param>
 	Frame(int x, int y, int width, int height, unsigned char alignment, HWND hParent, 
 		HINSTANCE hInstance, Style style);
+	~Frame()
+	{
+		OutputDebugString("Frame deleted\n");
+	}
 
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 	virtual void OnSizeChanged(HWND hParent) override;

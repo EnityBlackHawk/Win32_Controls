@@ -13,6 +13,8 @@
 #define BLACK RGB(0,0,1)
 #define WHITE RGB(255, 255,255)
 
+#define AUTO -1
+
 struct Margin
 {
 	int left;
@@ -33,6 +35,20 @@ struct Style
 class Element
 {
 public:
+	int GetActualWidth()
+	{
+		RECT rect;
+		GetWindowRect(hwnd, &rect);
+		return rect.right - rect.left;
+	}
+
+	int GetActualHeight()
+	{
+		RECT rect;
+		GetWindowRect(hwnd, &rect);
+		return rect.bottom - rect.top;
+	}
+
 	int GetPosX()
 	{
 		return posX;
@@ -72,8 +88,10 @@ public:
 	/// <param name="modes">[optional] Window SetWindowPos config flags</param>
 	virtual void SetPosition(int x, int y, int newWidth, int newHeight, DWORD modes)
 	{	
-		width = newWidth;
-		height = newHeight;
+
+		if(x != AUTO) width = newWidth;
+		if (y != AUTO) height = newHeight;
+
 		auto b = SetWindowPos(hwnd, NULL, x, y, width, height, modes);
 	}
 	/// <summary>

@@ -42,7 +42,7 @@ TextBox::TextBox(const char* text, int x, int y, int width, int height, HWND hPa
 
 	if (!hwnd)
 	{
-		ErrorMessageLastError();
+		ERROR_MESSAGE_LAST_ERROR();
 		return;
 	}
 
@@ -62,7 +62,7 @@ TextBox::TextBox(const char* text, int x, int y, int width, int height, HWND hPa
 	);
 	if (!hEdit)
 	{
-		ErrorMessageLastError();
+		ERROR_MESSAGE_LAST_ERROR();
 	}
 
 }

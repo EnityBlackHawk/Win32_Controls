@@ -20,9 +20,20 @@ public:
 
 		MessageBox(NULL, os.str().c_str(), "Error", 0);
 	}
+	static void ErrorMessage(const char* text, int line, const char* file)
+	{
+		std::ostringstream os;
+		//os << "Code: " << hResult << "\n";
+		os << "Line: " << line << "\n";
+		os << "File: " << file << "\n";
+		os << text;
+
+		MessageBox(NULL, os.str().c_str(), "Error", 0);
+	}
 
 };
 
-#define ErrorMessage(x) Exception::ErrorMessage(x, __LINE__, __FILE__)
-#define ErrorMessageLastError() Exception::ErrorMessage(GetLastError(), __LINE__, __FILE__)
+#define ERROR_MESSAGE(x) Exception::ErrorMessage(x, __LINE__, __FILE__)
+//#define ErrorMessageText(x) Exception::ErrorMessage(x, __LINE__, __FILE__)
+#define ERROR_MESSAGE_LAST_ERROR() Exception::ErrorMessage(GetLastError(), __LINE__, __FILE__)
 

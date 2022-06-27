@@ -2,8 +2,6 @@
 #include <windows.h>
 #include "Element.h"
 
-#define AUTO 0
-
 class Label : public Element
 {
 public:

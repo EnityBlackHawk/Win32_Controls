@@ -66,7 +66,7 @@ Button::Button(const char* text, int width, int height, int x, int y, unsigned c
     BOOL a = TrackMouseEvent(&tme);
     if (!a)
     {
-        ErrorMessageLastError();
+        ERROR_MESSAGE_LAST_ERROR();
     }
     
 }
@@ -91,7 +91,7 @@ void Button::RaiseEvent(int windowMessage)
     commands[windowMessage](this);
 }
 
-HRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     if (commands.contains(uMsg))
     {
@@ -135,7 +135,7 @@ HRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-HRESULT Button::ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT Button::ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     Button* pButton = reinterpret_cast<Button*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
     return pButton->ButtonProc(hwnd, uMsg, wParam, lParam);

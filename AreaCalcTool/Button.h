@@ -43,8 +43,8 @@ public:
 	/// <param name="windowMessage">Windows Message identifier</param>
 	virtual void RaiseEvent(int windowMessage) override;
 
-	HRESULT CALLBACK ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static HRESULT ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT CALLBACK ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
 	const char* text;
 	Style style;
