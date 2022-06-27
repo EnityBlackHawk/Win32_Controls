@@ -100,3 +100,5 @@ private:
 	std::vector<Frame> vFrames;
 	int** framesIndex;
 };
+
+#define GET_GRID_HWND(row, column) g.GetFrame(row, column).GetHwnd()

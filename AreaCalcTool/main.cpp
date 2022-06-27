@@ -28,7 +28,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow
 	g.DefineColumn(150, 150, -1);
 	g.GenerateGrid();
 
-	Label l = Label("Teste", 0, 0, AUTO, AUTO, g.GetFrame(0, 2).GetHwnd(), hInstance, ALIGN_CENTER, 35);
+	Label l = Label("Teste", 0, 0, AUTO, AUTO, GET_GRID_HWND(0, 2), hInstance, ALIGN_CENTER, 35);
 	g.AddElement(l, 0, 2);
 
 	window.AddElement(g);
