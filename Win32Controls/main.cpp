@@ -22,7 +22,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow
 {
 	window = Window(hInstance, "Title", WinProc, RGB(0, 0, 25), RGB(127,0,0), RGB(0, 0, 25), RGB(255,255,255), 0);
 	
-	StackPanel s = StackPanel(0, 0, ALIGN_CENTER, window.GetHwnd(), hInstance, NULL);
+	StackPanel s = StackPanel(0, 0, 0, 0, ALIGN_CENTER, window.GetHwnd(), hInstance, NULL, HORIZONTAL);
 
 	Label l = Label("Welcome", 0, 0, AUTO, AUTO, s.GetHwnd(), hInstance, ALIGN_CENTER, 35, NULL, WHITE);
 	s.AddChild(l);
