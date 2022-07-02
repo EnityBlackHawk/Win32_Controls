@@ -27,7 +27,7 @@ Window::Window(HINSTANCE hInstance, const char* name, WNDPROC windowProcedure, C
 		WS_EX_OVERLAPPEDWINDOW | dStyleEx,
 		name,
 		name,
-		WS_CLIPCHILDREN | WS_TILEDWINDOW | dStyle,
+		WS_TILEDWINDOW | dStyle,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,

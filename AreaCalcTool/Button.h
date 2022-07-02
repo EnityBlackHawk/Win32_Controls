@@ -28,6 +28,11 @@ public:
 	/// <param name="text">New text</param>
 	void SetText(const char* text);
 	
+	/// <summary>
+	/// Set visual style
+	/// </summary>
+	/// <param name="style"> New style</param>
+	void SetStyle(Style style);
 
 	/// <summary>
 	/// Draw button
@@ -42,6 +47,7 @@ public:
 	/// </summary>
 	/// <param name="windowMessage">Windows Message identifier</param>
 	virtual void RaiseEvent(int windowMessage) override;
+
 
 	LRESULT CALLBACK ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static LRESULT ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

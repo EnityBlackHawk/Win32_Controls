@@ -76,6 +76,10 @@ void Button::SetText(const char* text)
     Button::text = text;
 }
 
+void Button::SetStyle(Style style)
+{
+    Button::style = style;
+}
 
 
 HWND Button::Show(HWND hParent, HINSTANCE hInstance)

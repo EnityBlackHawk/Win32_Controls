@@ -1,9 +1,11 @@
 #include "Label.h"
+#include "Exception.h"
 
 Label::Label(const char* text, int x, int y, int width, int height, HWND hParent, HINSTANCE hInstance, unsigned char align, int fontHeight,
 	COLORREF background,
 	COLORREF foreground,
-	HFONT hFont):
+	HFONT hFont)
+	:
 	text(text),
 	backgroundColor(background),
 	foregroundColor(foreground),
@@ -26,6 +28,7 @@ Label::Label(const char* text, int x, int y, int width, int height, HWND hParent
 
 	const char* className = "classLabel";
 	WNDCLASSEX wc = {};
+
 
 	auto r = GetClassInfoEx(hInstance, className, &wc);
 	if (!r)
@@ -58,11 +61,7 @@ Label::Label(const char* text, int x, int y, int width, int height, HWND hParent
 
 	if (!hwnd)
 	{
-		LPTSTR erroMessage = NULL;
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS, NULL,
-			GetLastError(), MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&erroMessage, 0, nullptr);
-		MessageBox(hwnd, erroMessage, "Erro", 0);
-		LocalFree(erroMessage);
+		ERROR_MESSAGE_LAST_ERROR();
 	}
 
 }
@@ -117,11 +116,22 @@ LRESULT Label::MainProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps = {};
 		
 		auto h = BeginPaint(hwnd, &ps);
+		if (!hFont)
+		{
+			hFont = CreateFont(fontHeight, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+				CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Segoe UI")
+			);
+		}
 		
-		HFONT font = CreateFont(fontHeight, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
-			CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, TEXT("Segoe UI")
-		);
-		SelectObject(h, font);
+		if (!backgroundColor)
+		{
+			HBRUSH brush = (HBRUSH)GetClassLongPtr(hParent, GCLP_HBRBACKGROUND);
+			LOGBRUSH log;
+			GetObject(brush, sizeof(log), &log);
+			backgroundColor = log.lbColor;
+		}
+
+		SelectObject(h, hFont);
 		SetTextColor(h, foregroundColor);
 		SetBkColor(h, backgroundColor);
 		TextOut(h, 0, 0, text, strlen(text));

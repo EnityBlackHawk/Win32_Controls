@@ -27,6 +27,11 @@ LRESULT CALLBACK FrameProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             HPEN hp = CreatePen(PS_SOLID, style.borderThickness, style.borderColor);
             SelectObject(hdc, hp);
         }
+        else
+        {
+            HPEN hp = CreatePen(PS_SOLID, style.borderThickness, style.background);
+            SelectObject(hdc, hp);
+        }
         
         if(style.background != NULL)
         RoundRect(hdc, 0, 0, parentRect.right - parentRect.left, parentRect.bottom - parentRect.top, style.cornerRadius, style.cornerRadius);

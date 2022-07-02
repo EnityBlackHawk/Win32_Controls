@@ -14,11 +14,17 @@ void StackPanel::LoadChilds(HINSTANCE hInstance)
 
 	int y = 0;
 	int x = 0;
+
+	for (auto e : elements)
+	{
+		x = e->GetWidth() > x ? e->GetWidth() : x;
+	}
+
 	for (auto e : elements)
 	{
 		int eX = 0;
 
-		if (x != 0 && e->GetAlign() == ALIGN_CENTER && e->GetWidth() < x)
+		if (e->GetAlign() == ALIGN_CENTER && e->GetActualWidth() < x)
 		{
 			eX = (e->GetWidth() / 2);
 		}
@@ -28,7 +34,6 @@ void StackPanel::LoadChilds(HINSTANCE hInstance)
 		e->Show(hwnd, hInstance);
 		
 		
-		x = e->GetWidth() > x ? e->GetWidth() : x;
 		y += e->GetHeight() + e->margin.top + e->margin.bottom;
 	}
 	SetPosition(0, 0, x, y, SWP_NOMOVE);

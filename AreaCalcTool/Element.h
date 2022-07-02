@@ -14,6 +14,7 @@
 #define WHITE RGB(255, 255,255)
 
 #define AUTO -1
+#define RESIDUAL_SPACE -2
 
 struct Margin
 {
@@ -26,10 +27,10 @@ struct Margin
 struct Style
 {
 	int cornerRadius = 0;
-	COLORREF background = NULL;
+	COLORREF background = WHITE;
 	COLORREF foreground = NULL;
 	COLORREF borderColor = NULL;
-	int borderThickness = 1;
+	int borderThickness = 0;
 };
 
 class Element
@@ -161,7 +162,7 @@ public:
 			posY = margin.top;
 
 
-			SetPosition(1 + margin.left, margin.top, width, height, 0);
+			SetPosition(margin.left, margin.top, width, height, 0);
 		}
 		else if (align == ALIGN_CENTER)
 		{

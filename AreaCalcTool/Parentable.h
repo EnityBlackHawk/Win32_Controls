@@ -25,6 +25,11 @@ public:
 	/// </summary>
 	/// <param name="index">index of the Element</param>
 	virtual void RemoveChild(int index) = 0;
+
+	virtual std::vector<Element*>GetChildElements()
+	{
+		return elements;
+	}
 protected:
 	std::vector<Element*> elements;
 };

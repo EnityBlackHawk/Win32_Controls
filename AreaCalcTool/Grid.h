@@ -19,7 +19,8 @@ public:
 	/// <param name="align"> Align type</param>
 	/// <param name="hParent"> Parent's HWND</param>
 	/// <param name="hInstance"> Application HINSTANCE</param>
-	Grid(int x, int y, int width, int height, unsigned char align, HWND hParent, HINSTANCE hInstance);
+	/// <param name="frameStyle> Style applied to grid's internal frame</param>
+	Grid(int x, int y, int width, int height, unsigned char align, HWND hParent, HINSTANCE hInstance, Style frameStyle = {});
 	
 	/// <summary>
 	/// Add a row definition
@@ -89,16 +90,18 @@ private:
 
 
 	void ResizeFrames();
+	void RecalculateAuto();
 
 	static LRESULT CALLBACK DummyProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static LRESULT ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT MainProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	HINSTANCE hInstance;
+	Style frameStyle;
 	std::vector<int> rows;
 	std::vector<int> columns;
 	std::vector<Frame> vFrames;
 	int** framesIndex;
 };
 
-#define GET_GRID_HWND(row, column) g.GetFrame(row, column).GetHwnd()
+#define GET_GRID_HWND(gridInstance, row, column) gridInstance.GetFrame(row, column).GetHwnd()

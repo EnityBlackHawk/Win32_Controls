@@ -2,9 +2,9 @@
 #include "Exception.h"
 
 
-
-Grid::Grid(int x, int y, int width, int height, unsigned char align, HWND hParent, HINSTANCE hInstance):
-    hInstance(hInstance)
+Grid::Grid(int x, int y, int width, int height, unsigned char align, HWND hParent, HINSTANCE hInstance, Style frameStyle):
+    hInstance(hInstance),
+    frameStyle(frameStyle)
 {
     Element::width = width;
     Element::height = height;
@@ -16,7 +16,7 @@ Grid::Grid(int x, int y, int width, int height, unsigned char align, HWND hParen
 
     WNDCLASS wc = {};
     wc.lpszClassName = className;
-    wc.hbrBackground = CreateSolidBrush(RGB(0,150,0));
+    wc.hbrBackground = NULL;
     wc.hInstance = hInstance;
     wc.lpfnWndProc = DummyProc;
 
@@ -108,7 +108,7 @@ void Grid::GenerateGrid()
                 h = GetActualHeight() - temp;
             }
             else h = rows[i];
-            Frame f = Frame(x, y, w, h, 0, hwnd, hInstance, { 0, WHITE });
+            Frame f = Frame(x, y, w, h, 0, hwnd, hInstance, frameStyle);
             vFrames.push_back(f);
 
             framesIndex[i][j] = t;
@@ -141,32 +141,71 @@ void Grid::ResizeFrames()
     {
         for (int j = 0; j < columns.size(); j++)
         {
-            if (columns[j] == -1)
+            if (columns[j] == RESIDUAL_SPACE)
             {
                 int temp = 0;
                 for (int k : columns)
                 {
-                    temp = k == -1 ? temp : temp + k;
+                    temp = k == RESIDUAL_SPACE ? temp : temp + k;
                 }
                 w = GetActualWidth() - temp;
             }
             else w = columns[j];
-            if (rows[i] == -1)
+            if (rows[i] == RESIDUAL_SPACE)
             {
                 int temp = 0;
                 for (int k : rows)
                 {
-                    temp = k == -1 ? temp : temp + k;
+                    temp = k == RESIDUAL_SPACE ? temp : temp + k;
                 }
                 h = GetActualHeight() - temp;
             }
             else h = rows[i];
             vFrames[framesIndex[i][j]].SetPosition(x, y, w, h, 0);
+            vFrames[framesIndex[i][j]].Reload();
             vFrames[framesIndex[i][j]].LoadChilds(hInstance);
             x += w;
         }
         x = 0;
         y += h;
+    }
+}
+
+void Grid::RecalculateAuto()
+{
+    int x = 0;
+    int y = 0;
+    int h = 0;
+    int w = 0;
+    for (int i = 0; i < rows.size(); i++)
+    {
+        for (int j = 0; j < columns.size(); j++)
+        {
+            if (columns[j] == AUTO)
+            {
+                for (int k = 0; k < rows.size(); k++)
+                {
+                    Frame f = vFrames[framesIndex[k][j]];
+                    auto c = f.GetChildElements();
+                    for (Element* e : c)
+                    {
+                        int eW = e->GetWidth();
+                        w = eW > w ? eW : w;
+                    }
+                    f.SetPosition(f.GetPosX(), f.GetPosY(), w, f.GetHeight(), 0);
+                }
+
+                for (j++; j < columns.size(); j++)
+                {
+                    for (int k = 0; k < rows.size(); k++)
+                    {
+                        Frame f = vFrames[framesIndex[k][j]];
+                        f.SetPosition(f.GetPosX() + w, f.GetPosY(), f.GetWidth(), f.GetHeight(), 0);
+                        f.Reload();
+                    }   
+                }
+            }
+        }
     }
 }
 
@@ -180,14 +219,22 @@ LRESULT Grid::MainProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         HDC hdc = BeginPaint(hwnd, &ps);
 
         //if (vFrames.empty()) GenerateFrames();
+
         ResizeFrames();
+        //RecalculateAuto();
+
 
         EndPaint(hwnd, &ps);
         break;
     }
+    case WM_SIZE:
+        ResizeFrames();
+        break;
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
+
+
 
 
 
