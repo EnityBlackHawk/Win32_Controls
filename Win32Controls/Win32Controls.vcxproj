@@ -131,7 +131,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
-    <ClCompile Include="Exception.cpp" />
     <ClCompile Include="Frame.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Label.cpp" />
