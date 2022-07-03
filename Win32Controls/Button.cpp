@@ -100,6 +100,7 @@ LRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
     if (commands.contains(uMsg))
     {
         RaiseEvent(uMsg);
+        if (overwriteProc) return;
     }
 
     switch (uMsg)

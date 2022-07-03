@@ -18,6 +18,25 @@ public:
 	{
 		commands[windowMessage] = pEvent;
 	}
+
+	/// <summary>
+	/// Remove a function binded
+	/// </summary>
+	/// <param name="windowMessage"> Window message identifier</param>
+	virtual void RemoveEvent(int windowMessage)
+	{
+		commands.extract(windowMessage);
+	}
+
+	/// <summary>
+	/// The function raised will overwrite the original
+	/// </summary>
+	/// <param name="value"></param>
+	virtual void OverwriteProcedures(bool value)
+	{
+		overwriteProc = value;
+	}
+
 	/// <summary>
 	/// Call the event function
 	/// </summary>
@@ -26,4 +45,5 @@ public:
 
 protected:
 	std::unordered_map<int, EVENT> commands;
+	bool overwriteProc = false;
 };
