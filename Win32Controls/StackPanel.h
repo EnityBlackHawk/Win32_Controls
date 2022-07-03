@@ -24,7 +24,7 @@ public:
     /// <param name="hParent">Parent's HWND</param>
     /// <param name="hInstance">Application HINSTANCE</param>
     /// <param name="background">Backgournd COLORREF</param>
-    StackPanel(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, COLORREF background,
+    StackPanel(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, Style style,
         unsigned char orientation = VERTICAL);
     /// <summary>
     /// Draw childs

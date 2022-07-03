@@ -119,7 +119,7 @@ LRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         
         if (style.borderColor != NULL)
         {
-            HPEN pen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+            HPEN pen = CreatePen(PS_SOLID, style.borderThickness, RGB(255, 0, 0));
             SelectObject(hrc, pen);
         }
         

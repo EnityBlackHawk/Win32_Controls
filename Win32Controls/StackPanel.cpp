@@ -5,10 +5,10 @@ StackPanel::StackPanel(Frame&& frame):
 {
 }
 
-StackPanel::StackPanel(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, COLORREF background,
+StackPanel::StackPanel(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, Style style,
 	unsigned char orientation)
 	:
-	Frame(x, y, width, height, alignment, hParent, hInstance, {0, background}),
+	Frame(x, y, width, height, alignment, hParent, hInstance, {0, style.background}),
 	orientation(orientation)
 {
 }
@@ -20,10 +20,16 @@ void StackPanel::LoadChilds(HINSTANCE hInstance)
 
 	if (orientation == VERTICAL)
 	{
-		for (auto e : elements)
+
+		if (!width)
 		{
-			x = e->GetWidth() > x ? e->GetWidth() : x;
+			for (auto e : elements)
+			{
+				x = e->GetWidth() > x ? e->GetWidth() : x;
+			}
 		}
+		else x = width;
+		
 
 		for (auto e : elements)
 		{
@@ -31,7 +37,7 @@ void StackPanel::LoadChilds(HINSTANCE hInstance)
 
 			if (e->GetAlign() == ALIGN_CENTER && e->GetActualWidth() < x)
 			{
-				eX = (e->GetWidth() / 2);
+				eX = (x / 2) - (e->GetWidth() / 2);
 			}
 
 			e->SetAlign(0);
@@ -45,7 +51,31 @@ void StackPanel::LoadChilds(HINSTANCE hInstance)
 
 	else if (orientation == HORIZONTAL)
 	{
-		ERROR_MESSAGE("Horizontal stackpanel not implemented");
+		if (!height)
+		{
+			for (auto e : elements)
+				y = e->GetHeight() > y ? e->GetHeight() : y;
+		}
+		else y = height;
+		
+
+		for (auto e : elements)
+		{
+			int eY = 0;
+
+			if (e->GetAlign() == ALIGN_CENTER && e->GetActualHeight() < y)
+			{
+				eY = (y / 2) - (e->GetHeight() / 2);
+			}
+
+			e->SetAlign(0);
+			e->SetPosition(e->margin.left + x, e->margin.top + eY, e->GetWidth(), e->GetHeight(), 0);
+			e->Show(hwnd, hInstance);
+
+
+			x += e->GetWidth() + e->margin.left + e->margin.right;
+		}
+	
 	}
 
 	x = (width == NULL || width == AUTO) ? x : width;

@@ -27,7 +27,7 @@ struct Margin
 struct Style
 {
 	int cornerRadius = 0;
-	COLORREF background = WHITE;
+	COLORREF background = NULL;
 	COLORREF foreground = NULL;
 	COLORREF borderColor = NULL;
 	int borderThickness = 0;
