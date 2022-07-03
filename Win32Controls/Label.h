@@ -20,10 +20,9 @@ public:
 	/// <param name="background">Background COLORREF</param>
 	/// <param name="foreground">Foreground COLORREF</param>
 	/// <param name="hFont">[UNUSED] Font type</param>
-	Label(const char* text, int x, int y, int width, int height, HWND hParent, HINSTANCE hInstance, unsigned char align, 
-		int fontHeight = 35, 
-		COLORREF background = NULL,
-		COLORREF foreground = RGB(255, 255, 255), 
+	Label(const char* text, int x, int y, int width, int height, HWND hParent, HINSTANCE hInstance, unsigned char align,
+		Style style,
+		int fontHeight = 35,
 		HFONT hFont = NULL);
 	
 	/// <summary>
@@ -43,8 +42,6 @@ private:
 
 protected:
 	const char* text;
-	COLORREF backgroundColor;
-	COLORREF foregroundColor;
 	int fontHeight;
 	HFONT hFont;
 

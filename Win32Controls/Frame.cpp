@@ -45,14 +45,14 @@ LRESULT CALLBACK FrameProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 
 Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND hParent, HINSTANCE hInstance, 
-    Style style):
-    style(style)
+    Style style)
 {
     posX = x;
     posY = y;
     Element::width = width;
     Element::height = height;
     Element::align = alignment;
+    Element::paintStyle = style;
 
     const char* name = "frame";
     HBRUSH b;
@@ -125,6 +125,12 @@ void Frame::AddChild(Element& rElement)
         MessageBox(hwnd, "Invalid hParent", "Error", NULL);
         return;
     }
+
+    if (paintStyle.background && !rElement.GetPaintStyle().background)
+    {
+        rElement.SetPaintStyleBackground(paintStyle.background);
+    }
+
     elements.push_back(&rElement);
 }
 

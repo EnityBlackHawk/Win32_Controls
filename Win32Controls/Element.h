@@ -216,6 +216,16 @@ public:
 		return hParent;
 	}
 
+	void SetPaintStyleBackground(COLORREF color)
+	{
+		paintStyle.background = color;
+	}
+
+	Style GetPaintStyle()
+	{
+		return paintStyle;
+	}
+
 	Margin margin = { 0,0,0,0 };
 
 protected:
@@ -224,6 +234,7 @@ protected:
 	int width;
 	int height;
 	DWORD style;
+	Style paintStyle;
 	HWND hwnd;
 	HWND hParent;
 	unsigned char align;

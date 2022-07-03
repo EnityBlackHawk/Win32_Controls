@@ -18,7 +18,6 @@ LRESULT CALLBACK DummyProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 Button::Button(const char* text, int width, int height, int x, int y, unsigned char align,
     int fontSize, HWND hParent, HINSTANCE hInstance, Style style):
     text(text),
-    style(style),
     fontSize(fontSize)
 {
     Element::width = width;
@@ -27,6 +26,7 @@ Button::Button(const char* text, int width, int height, int x, int y, unsigned c
     posY = y;
     Element::align = align;
     Element::hParent = hParent;
+    Element::paintStyle = style;
     handCursor = LoadCursor(NULL, IDC_HAND);
     
     const char* className = "CustomButtonClass";
@@ -78,7 +78,7 @@ void Button::SetText(const char* text)
 
 void Button::SetStyle(Style style)
 {
-    Button::style = style;
+    paintStyle = style;
 }
 
 
@@ -100,7 +100,7 @@ LRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
     if (commands.contains(uMsg))
     {
         RaiseEvent(uMsg);
-        if (overwriteProc) return;
+        if (overwriteProc) return 0;
     }
 
     switch (uMsg)
@@ -114,17 +114,18 @@ LRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         auto hrc = BeginPaint(hwnd, & ps);
         
         SelectObject(hrc, font);
-        SetTextColor(hrc, style.foreground);
-        SetBkColor(hrc, style.background);
+        SetTextColor(hrc, paintStyle.foreground);
+        SetBkColor(hrc, paintStyle.background);
+        SelectObject(hrc, CreateSolidBrush(paintStyle.background));
         SetTextAlign(hrc, TA_CENTER);
         
-        if (style.borderColor != NULL)
+        if (paintStyle.borderColor != NULL)
         {
-            HPEN pen = CreatePen(PS_SOLID, style.borderThickness, RGB(255, 0, 0));
+            HPEN pen = CreatePen(PS_SOLID, paintStyle.borderThickness, RGB(255, 0, 0));
             SelectObject(hrc, pen);
         }
         
-        auto r = RoundRect(hrc, 0, 0, width, height, style.cornerRadius, style.cornerRadius);
+        auto r = RoundRect(hrc, 0, 0, width, height, paintStyle.cornerRadius, paintStyle.cornerRadius);
         r = TextOut(hrc, width / 2, ((height - fontSize)/2), text, strlen(text));
         DeleteObject(font);
         EndPaint(hwnd, &ps);

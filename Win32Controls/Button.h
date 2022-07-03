@@ -53,7 +53,6 @@ public:
 	static LRESULT ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
 	const char* text;
-	Style style;
 	HCURSOR handCursor;
 	int fontSize;
 

@@ -1,14 +1,12 @@
 #include "Label.h"
 #include "Exception.h"
 
-Label::Label(const char* text, int x, int y, int width, int height, HWND hParent, HINSTANCE hInstance, unsigned char align, int fontHeight,
-	COLORREF background,
-	COLORREF foreground,
+Label::Label(const char* text, int x, int y, int width, int height, HWND hParent, HINSTANCE hInstance, unsigned char align,
+	Style sStyle,
+	int fontHeight,
 	HFONT hFont)
 	:
 	text(text),
-	backgroundColor(background),
-	foregroundColor(foreground),
 	fontHeight(fontHeight)
 {
 
@@ -24,6 +22,7 @@ Label::Label(const char* text, int x, int y, int width, int height, HWND hParent
 	Label::height = height;
 	Label::align = align;
 	Element::hParent = hParent;
+	Element::paintStyle = sStyle;
 
 
 	const char* className = "classLabel";
@@ -36,12 +35,12 @@ Label::Label(const char* text, int x, int y, int width, int height, HWND hParent
 		wc.lpszClassName = className;
 		wc.hInstance = hInstance;
 		wc.lpfnWndProc = ProcSetup;
-		wc.hbrBackground = CreateSolidBrush(backgroundColor);
+		wc.hbrBackground = CreateSolidBrush(paintStyle.background);
 		wc.cbSize = sizeof(wc);
 	}
 	else
 	{
-		wc.hbrBackground = CreateSolidBrush(backgroundColor);
+		wc.hbrBackground = CreateSolidBrush(paintStyle.background);
 	}
 	RegisterClassEx(&wc);
 	
@@ -76,8 +75,8 @@ void Label::ChangeText(const char* newText)
 
 void Label::SetColor(COLORREF foregroud, COLORREF background)
 {
-	foregroundColor = foregroud;
-	backgroundColor = background;
+	paintStyle.foreground = foregroud;
+	paintStyle.background = background;
 }
 
 HWND Label::Show(HWND hParent, HINSTANCE hInstance)
@@ -123,17 +122,17 @@ LRESULT Label::MainProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			);
 		}
 		
-		if (!backgroundColor)
+		if (!paintStyle.background)
 		{
 			HBRUSH brush = (HBRUSH)GetClassLongPtr(hParent, GCLP_HBRBACKGROUND);
 			LOGBRUSH log;
 			GetObject(brush, sizeof(log), &log);
-			backgroundColor = log.lbColor;
+			paintStyle.background = log.lbColor;
 		}
 
 		SelectObject(h, hFont);
-		SetTextColor(h, foregroundColor);
-		SetBkColor(h, backgroundColor);
+		SetTextColor(h, paintStyle.foreground);
+		SetBkColor(h, paintStyle.background);
 		TextOut(h, 0, 0, text, strlen(text));
 		EndPaint(hwnd, &ps);
 		break;
