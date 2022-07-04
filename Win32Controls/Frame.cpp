@@ -1,4 +1,5 @@
 #include "Frame.h"
+#include "Exception.h"
 #include <windows.h>
 
 LRESULT CALLBACK FrameProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -36,6 +37,7 @@ LRESULT CALLBACK FrameProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         if(style.background != NULL)
         RoundRect(hdc, 0, 0, parentRect.right - parentRect.left, parentRect.bottom - parentRect.top, style.cornerRadius, style.cornerRadius);
         
+
         EndPaint(hwnd, &ps);
         break;
     }
@@ -53,6 +55,7 @@ Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND 
     Element::height = height;
     Element::align = alignment;
     Element::paintStyle = style;
+    Element::hParent = hParent;
 
     const char* name = "frame";
     HBRUSH b;
@@ -67,7 +70,7 @@ Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND 
     fr.lpszClassName = "frame";
     fr.hbrBackground = (HBRUSH)GetClassLongPtr(hParent, GCLP_HBRBACKGROUND);;
     fr.hInstance = hInstance;
-    fr.lpfnWndProc = FrameProc;
+    fr.lpfnWndProc = ProcSetup;
     fr.hCursor = LoadCursor(NULL, IDC_ARROW);
     RegisterClass(&fr);
 
@@ -83,7 +86,7 @@ Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND 
         hParent,
         NULL,
         hInstance,
-        &style
+        this
     );
 
     if (!hwnd) return;
@@ -91,9 +94,61 @@ Frame::Frame(int x, int y, int width, int height, unsigned char alignment, HWND 
 
 }
 
+LRESULT Frame::ProcSetup(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    if (uMsg == WM_CREATE)
+    {
+        CREATESTRUCT* cs = reinterpret_cast<CREATESTRUCT*>(lParam);
+        Frame* pFrame = reinterpret_cast<Frame*>(cs->lpCreateParams);
+        SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)&Frame::ProcStart);
+        SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)pFrame);
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+LRESULT Frame::ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    Frame* pFrame = reinterpret_cast<Frame*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+    return pFrame->MainProc(hwnd, uMsg, wParam, lParam);
+}
+
+LRESULT Frame::MainProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (uMsg)
+    {
+    case WM_PAINT:
+    {
+        //RECT parentRect;
+        //GetWindowRect(hwnd, &parentRect);
+
+        PAINTSTRUCT ps = {};
+        auto hdc = BeginPaint(hwnd, &ps);
+        HBRUSH b = CreateSolidBrush(paintStyle.background);
+        SelectObject(hdc, b);
+
+        if (paintStyle.borderColor)
+        {
+            HPEN hp = CreatePen(PS_SOLID, paintStyle.borderThickness, paintStyle.borderColor);
+            SelectObject(hdc, hp);
+        }
+        else
+        {
+            HPEN hp = CreatePen(PS_SOLID, paintStyle.borderThickness, paintStyle.background);
+            SelectObject(hdc, hp);
+        }
+
+        if (paintStyle.background != NULL)
+           RoundRect(hdc, 0, 0, width, height, paintStyle.cornerRadius, paintStyle.cornerRadius);
+
+        EndPaint(hwnd, &ps);
+        break;
+    }
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
 HWND Frame::Show(HWND hParent, HINSTANCE hInstance)
 {
-    
     ShowWindow(hwnd, 10);
     Align(hParent);
     LoadChilds(hInstance);
@@ -122,7 +177,7 @@ void Frame::AddChild(Element& rElement)
 {
     if (rElement.GetPatentHwnd() != hwnd)
     {
-        MessageBox(hwnd, "Invalid hParent", "Error", NULL);
+        ERROR_MESSAGE("hParent invalid");
         return;
     }
 

@@ -2,6 +2,7 @@
 #include "Label.h"
 #include "StackPanel.h"
 #include "Button.h"
+#include "Grid.h"
 
 Window window;
 
@@ -13,8 +14,7 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void ButtonClick(Element* sender)
 {
 	auto b = reinterpret_cast<Button*>(sender);
-	b->SetText("Clicked");
-	b->SetStyle({ 10, WHITE, RGB(255, 0, 0), RGB(255, 0,0), 1});
+	b->SetStyle({ 0, BLACK, WHITE, BLACK, 0});
 	b->Reload();
 }
 
@@ -22,16 +22,19 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hIgnore, PSTR lpCmdLine, INT nCmdShow
 {
 	window = Window(hInstance, "Title", WinProc, RGB(0, 0, 25), RGB(127,0,0), RGB(0, 0, 25), RGB(255,255,255), 0);
 	
-	StackPanel s = StackPanel(0, 0, 0, 0, ALIGN_CENTER, window.GetHwnd(), hInstance, {0, RGB(25,0,0)}, VERTICAL);
+	Grid g = Grid(0, 0, 0, 0, ALIGN_STREACH, window.GetHwnd(), hInstance, {});
+	
+	g.DefineColumn(200, RESIDUAL_SPACE);
+	g.DefineRow(RESIDUAL_SPACE);
+	g.GenerateGrid();
 
-	Label l = Label("Welcome", 0, 0, AUTO, AUTO, s.GetHwnd(), hInstance, ALIGN_CENTER, {0, NULL, WHITE}, 35);
-	s.AddChild(l);
+	StackPanel menuStack = StackPanel(0, 0, 0, 0, ALIGN_STREACH, GET_GRID_HWND(g, 0, 0), hInstance, {0, WHITE}, HORIZONTAL);
+	g.AddElement(menuStack, 0, 0);
 
-	Button b = Button("Click me", 200, 50, 0, 0, ALIGN_CENTER, 35, s.GetHwnd(), hInstance, {10, WHITE});
-	b.SetMargin({ 0, 5, 0, 0 });
-	s.AddChild(b);
-	b.AddEvent(WM_LBUTTONUP, ButtonClick);
-
-	window.AddElement(s);
+	Button homeButton = Button("Home", 200, 40, 0, 0, ALIGN_NONE, 35, menuStack.GetHwnd(), hInstance, { 0, WHITE, BLACK, NULL, 0});
+	homeButton.AddEvent(WM_LBUTTONUP, ButtonClick);
+	menuStack.AddChild(homeButton);
+	
+	window.AddElement(g);
 	window.Show();
 }

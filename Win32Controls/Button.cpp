@@ -119,9 +119,14 @@ LRESULT CALLBACK Button::ButtonProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM 
         SelectObject(hrc, CreateSolidBrush(paintStyle.background));
         SetTextAlign(hrc, TA_CENTER);
         
-        if (paintStyle.borderColor != NULL)
+        if (paintStyle.borderColor)
         {
-            HPEN pen = CreatePen(PS_SOLID, paintStyle.borderThickness, RGB(255, 0, 0));
+            HPEN pen = CreatePen(PS_SOLID, paintStyle.borderThickness, paintStyle.borderColor);
+            SelectObject(hrc, pen);
+        }
+        else
+        {
+            HPEN pen = CreatePen(PS_SOLID, paintStyle.borderThickness, paintStyle.background);
             SelectObject(hrc, pen);
         }
         

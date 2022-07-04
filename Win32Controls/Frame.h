@@ -19,6 +19,10 @@ public:
 	Frame(int x, int y, int width, int height, unsigned char alignment, HWND hParent, 
 		HINSTANCE hInstance, Style style);
 
+	static LRESULT CALLBACK ProcSetup(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT ProcStart(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT MainProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	virtual HWND Show(HWND hParent, HINSTANCE hInstance) override;
 	virtual void OnSizeChanged(HWND hParent) override;
 

@@ -6,6 +6,8 @@
 #define ALIGN_CENTER 2
 #define ALIGN_RIGHT 3
 #define ALIGN_STREACH 4
+#define ALIGN_VERTICAL_STREACH 5
+#define ALIGN_HORIZONTAL_STREACH 6
 
 #define ALIGN_CENTER_WINDOW 5
 #define ALIGN_STREACH_WINDOW 6
@@ -195,6 +197,19 @@ public:
 
 			SetPosition(margin.left, margin.top, width, height, 0);
 		}
+
+		else if (align == ALIGN_VERTICAL_STREACH)
+		{
+			RECT rect;
+			GetWindowRect(hParent, &rect);
+			auto parentHeight = rect.bottom - rect.top;
+
+			height = parentHeight - (margin.bottom + margin.top);
+			posY = margin.top;
+
+			SetPosition(margin.left, margin.top, width, height, 0);
+		}
+
 	}
 
 	void SetParent(HWND hParent)
